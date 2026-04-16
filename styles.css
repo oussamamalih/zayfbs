@@ -200,3 +200,105 @@ button { font-family: inherit; cursor: pointer; }
   color: #777;
   font-size: 15px;
 }
+
+.certi-btn {
+
+  border-radius: 7px;
+  border: none;
+  padding-bottom: 3px;
+  background-color: var(--c3);
+  color: aliceblue;
+  font-weight: 600;
+}
+/* ///////////////////// */
+.steps-cards {
+    display: flex;
+    gap: 20px;
+    padding: 40px;
+    justify-content: center;
+}
+
+.cardx {
+    position: relative;
+    width: 200px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.cardx img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.cardx:hover {
+    transform: scale(1.05);
+}
+
+.rank {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 80px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.9);
+    -webkit-text-stroke: 3px black;
+    line-height: 1;
+}
+
+
+.steps h2 {
+
+ border-bottom: 3px solid #2e5f4d;
+margin-left: 38%;
+  padding-bottom: 1px;
+ text-align: center; 
+ align-items: center;
+   display: inline-block;
+}
+
+/* Title overlay (TOP of image) */
+.title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+
+    color: var(--c4);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.7),
+        rgba(0,0,0,0)
+    );
+}
+
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+footer {
+  background: var(--c4);
+  color: var(--c1);
+  padding: 1.1rem 2rem;
+}
+
+.footer-s {
+  font-weight: 600;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .78rem;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
