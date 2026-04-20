@@ -1,296 +1,192 @@
-// ============================================================
-//  script.js – ZayFBS Website
-// ============================================================
-
-
-// ===================================================
-// 1. NAVIGATION – switch between pages
-// ===================================================
-
-function showPage(pageName) {
-  // Hide all pages
-  const allPages = document.querySelectorAll('.page');
-  allPages.forEach(function(page) {
-    page.classList.remove('active');
-  });
-
-  // Show the page we want
-  document.getElementById('page-' + pageName).classList.add('active');
-
-  // Highlight the active nav link
-  const allLinks = document.querySelectorAll('.nav-links a');
-  allLinks.forEach(function(link) {
-    link.classList.remove('active');
-  });
-  document.getElementById('nav-' + pageName).classList.add('active');
-
-  // Scroll to top
-  window.scrollTo(0, 0);
-}
-
-
-// ===================================================
-// 2. PRODUCTS DATA
-// ===================================================
-
-// This array holds all products
-var products = [
+// PRODUCTS DATA
+const products = [
   {
-    id: 1,
-    name: "Huile Extra Vierge Classique",
-    desc: "Pressée à froid, issue d'olives Picholine marocaine. Arôme fruité, légèrement poivré, idéale en cuisine.",
-    price: 75,
-    img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&q=80"
+    name: "Protein Powder",
+    price: 200,
+    image: "images/step1.png"
   },
   {
-    id: 2,
-    name: "Huile Bio Premium 500ml",
-    desc: "Certifiée Agriculture Biologique. Zéro pesticide, récolte manuelle. Goût intense et délicat.",
-    price: 120,
-    img: "https://images.unsplash.com/photo-1588975600290-8cfc9fd7855c?w=400&q=80"
+    name: "Fitness Gloves",
+    price: 80,
+    image: "images/step1.png"
   },
   {
-    id: 3,
-    name: "Huile Artisanale 1L",
-    desc: "Extraction traditionnelle à la meule de pierre. Richesse en polyphénols. Conditionnée en bouteille verre.",
-    price: 145,
-    img: "https://images.unsplash.com/photo-1601459427108-47e20d579a05?w=400&q=80"
+    name: "Fitness Gloves",
+    price: 80,
+    image: "images/step1.png"
   },
   {
-    id: 4,
-    name: "Coffret Découverte",
-    desc: "3 bouteilles de 250ml représentant nos 3 variétés d'olives locales. Idéal cadeau ou dégustation.",
-    price: 210,
-    img: "https://images.unsplash.com/photo-1628157588553-5eeea00af15c?w=400&q=80"
+    name: "Fitness Gloves",
+    price: 80,
+    image: "images/step1.png"
   }
 ];
 
-// This keeps track of which product we are editing (null = adding new)
-var editingId = null;
+// CART ARRAY
+let cart = [];
 
+// GET ELEMENTS
+const container = document.getElementById("shop-container");
+const navLinks = document.querySelectorAll(".nav-links a");
+const cartBtn = document.getElementById("cartBtn");
+const cartPanel = document.getElementById("cartPanel");
+const cartOverlay = document.getElementById("cartOverlay");
+const closeCartBtn = document.getElementById("closeCart");
+const cartItemsContainer = document.getElementById("cartItems");
+const cartCountDisplay = document.getElementById("cartCount");
+const totalPriceDisplay = document.getElementById("totalPrice");
 
-// Render all product cards to the page
-function renderProducts() {
-  var grid = document.getElementById('products-grid');
-  grid.innerHTML = ''; // clear first
+// ========== PAGE SWITCHING ==========
+function showPage(pageName) {
+  container.innerHTML = "";
+  navLinks.forEach(link => link.classList.remove("active"));
+  document.querySelector(`[data-page="${pageName}"]`).classList.add("active");
 
-  products.forEach(function(product) {
-    var card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML =
-      '<img src="' + product.img + '" alt="' + product.name + '" onerror="this.src=\'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&q=80\'"/>' +
-      '<div class="card-body">' +
-        '<h3>' + product.name + '</h3>' +
-        '<p>' + product.desc + '</p>' +
-        '<p class="prod-price">' + product.price + ' DH</p>' +
-        '<div class="prod-actions">' +
-          '<button class="btn btn-secondary" onclick="addToCart(' + product.id + ')">Ajouter</button>' +
-          '<button class="btn btn-outline"    onclick="openModal(' + product.id + ')">Modifier</button>' +
-          '<button class="btn btn-danger"     onclick="deleteProduct(' + product.id + ')">Supprimer</button>' +
-        '</div>' +
-      '</div>';
+  if (pageName === "home") {
+    showHome();
+  } else if (pageName === "products") {
+    showProducts();
+  } else if (pageName === "contact") {
+    showContact();
+  }
+}
+
+// ========== HOME PAGE ==========
+function showHome() {
+  container.innerHTML = `
+    <div class="home-section">
+      <h1>Welcome to ZayFBS</h1>
+      <p>Discover our premium products</p>
+      <button class="home-btn" onclick="switchPage('products')">Shop Now</button>
+    </div>
+  `;
+}
+
+// ========== PRODUCTS PAGE ==========
+function showProducts() {
+  container.innerHTML = '<div class="products-grid"></div>';
+  const grid = document.querySelector(".products-grid");
+
+  products.forEach((product, index) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p class="prix">${product.price} MAD</p>
+      <button class="add-btn" onclick="addToCart(${index})">Add to Cart</button>
+    `;
     grid.appendChild(card);
   });
 }
 
-
-// ===================================================
-// 3. MODAL – Add / Edit product
-// ===================================================
-
-function openModal(productId) {
-  var overlay = document.getElementById('modal-overlay');
-  overlay.classList.add('open');
-
-  if (productId) {
-    // We are EDITING an existing product
-    editingId = productId;
-    document.getElementById('modal-title').textContent = 'Modifier le produit';
-
-    // Find the product and fill the form
-    var product = products.find(function(p) { return p.id === productId; });
-    document.getElementById('prod-name').value  = product.name;
-    document.getElementById('prod-desc').value  = product.desc;
-    document.getElementById('prod-price').value = product.price;
-    document.getElementById('prod-img').value   = product.img;
-  } else {
-    // We are ADDING a new product
-    editingId = null;
-    document.getElementById('modal-title').textContent = 'Ajouter un produit';
-    document.getElementById('prod-name').value  = '';
-    document.getElementById('prod-desc').value  = '';
-    document.getElementById('prod-price').value = '';
-    document.getElementById('prod-img').value   = '';
-  }
+// ========== CONTACT PAGE ==========
+function showContact() {
+  container.innerHTML = `
+    <div class="contact-section">
+      <h1>Nous Contacter</h1>
+      <div class="contact-content">
+        <div class="contact-info">
+          <h3>📍 Adresse</h3>
+          <p>Route des Oliviers, Equith Ben Salah</p>
+          
+          <h3>☎️ Téléphone</h3>
+          <p>+212 5 2526 66 44</p>
+          
+          <h3>✉️ Email</h3>
+          <p>contact@zaybs.ma</p>
+        </div>
+        
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <input type="text" placeholder="Nom complet" required>
+          <input type="email" placeholder="Email" required>
+          <input type="text" placeholder="Sujet" required>
+          <textarea placeholder="Message..." required></textarea>
+          <button type="submit">Envoyer</button>
+        </form>
+      </div>
+    </div>
+  `;
 }
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
+// ========== CART FUNCTIONS ==========
+function addToCart(productIndex) {
+  const product = products[productIndex];
+  cart.push({...product, id: Date.now()});
+  updateCart();
+  openCart();
 }
 
-function saveProduct() {
-  // Get values from the form
-  var name  = document.getElementById('prod-name').value.trim();
-  var desc  = document.getElementById('prod-desc').value.trim();
-  var price = parseInt(document.getElementById('prod-price').value);
-  var img   = document.getElementById('prod-img').value.trim();
-
-  // Basic validation
-  if (!name || !desc || !price) {
-    alert('Veuillez remplir les champs obligatoires (*)');
-    return;
-  }
-
-  // Default image if none provided
-  if (!img) {
-    img = 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&q=80';
-  }
-
-  if (editingId) {
-    // Update existing product
-    var index = products.findIndex(function(p) { return p.id === editingId; });
-    products[index].name  = name;
-    products[index].desc  = desc;
-    products[index].price = price;
-    products[index].img   = img;
-  } else {
-    // Add new product
-    var newId = Date.now(); // unique id using timestamp
-    products.push({ id: newId, name: name, desc: desc, price: price, img: img });
-  }
-
-  closeModal();
-  renderProducts();
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  updateCart();
 }
 
+function updateCart() {
+  // Update cart count
+  cartCountDisplay.textContent = cart.length;
 
-// ===================================================
-// 4. DELETE product
-// ===================================================
+  // Clear cart items container
+  cartItemsContainer.innerHTML = "";
 
-function deleteProduct(productId) {
-  var confirmed = confirm('Voulez-vous vraiment supprimer ce produit ?');
-  if (confirmed) {
-    // Remove it from the array
-    products = products.filter(function(p) { return p.id !== productId; });
-    renderProducts();
-  }
-}
-
-
-// ===================================================
-// 5. SHOPPING CART
-// ===================================================
-
-// Cart is an array of objects: { id, name, price, qty }
-var cart = [];
-
-
-// Open or close the cart sidebar
-function toggleCart() {
-  var sidebar = document.getElementById('cart-sidebar');
-  var overlay = document.getElementById('cart-overlay');
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('open');
-}
-
-
-// Add a product to the cart
-function addToCart(productId) {
-  var product = products.find(function(p) { return p.id === productId; });
-
-  // Check if the product is already in the cart
-  var existing = cart.find(function(item) { return item.id === productId; });
-
-  if (existing) {
-    // Just increase the quantity
-    existing.qty += 1;
-  } else {
-    // Add new item to cart
-    cart.push({
-      id:    product.id,
-      name:  product.name,
-      price: product.price,
-      qty:   1
-    });
-  }
-
-  updateCartUI();
-
-  // Give a small visual feedback
-  alert('✅ "' + product.name + '" ajouté au panier !');
-}
-
-
-// Increase quantity of an item
-function increaseQty(productId) {
-  var item = cart.find(function(i) { return i.id === productId; });
-  if (item) item.qty += 1;
-  updateCartUI();
-}
-
-
-// Decrease quantity – remove item if qty reaches 0
-function decreaseQty(productId) {
-  var item = cart.find(function(i) { return i.id === productId; });
-  if (item) {
-    item.qty -= 1;
-    if (item.qty <= 0) {
-      // Remove from cart
-      cart = cart.filter(function(i) { return i.id !== productId; });
-    }
-  }
-  updateCartUI();
-}
-
-
-// Re-draw the cart sidebar contents
-function updateCartUI() {
-  var cartItemsDiv = document.getElementById('cart-items');
-  var cartCountEl  = document.getElementById('cart-count');
-  var cartTotalEl  = document.getElementById('cart-total');
-
-  // Count total items
-  var totalItems = cart.reduce(function(sum, item) { return sum + item.qty; }, 0);
-  cartCountEl.textContent = totalItems;
-
-  // Calculate total price
-  var totalPrice = cart.reduce(function(sum, item) { return sum + item.price * item.qty; }, 0);
-  cartTotalEl.textContent = totalPrice + ' DH';
-
-  // Empty cart message
   if (cart.length === 0) {
-    cartItemsDiv.innerHTML = '<p class="cart-empty">Votre panier est vide.</p>';
+    cartItemsContainer.innerHTML = '<div class="cart-empty">Votre panier est vide</div>';
+    totalPriceDisplay.textContent = "0";
     return;
   }
 
-  // Build HTML for each cart item
-  var html = '';
-  cart.forEach(function(item) {
-    html +=
-      '<div class="cart-item">' +
-        '<div class="cart-item-info">' +
-          '<strong>' + item.name + '</strong>' +
-          '<span>' + item.price + ' DH</span>' +
-        '</div>' +
-        '<div class="cart-qty">' +
-          '<button onclick="decreaseQty(' + item.id + ')">−</button>' +
-          '<span>' + item.qty + '</span>' +
-          '<button onclick="increaseQty(' + item.id + ')">+</button>' +
-        '</div>' +
-      '</div>';
+  // Display each item
+  cart.forEach((item, index) => {
+    const cartItem = document.createElement("div");
+    cartItem.classList.add("cart-item");
+    cartItem.innerHTML = `
+      <div class="cart-item-info">
+        <h4>${item.name}</h4>
+        <p>${item.price} MAD</p>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Supprimer</button>
+    `;
+    cartItemsContainer.appendChild(cartItem);
   });
 
-  cartItemsDiv.innerHTML = html;
+  // Calculate total price
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  totalPriceDisplay.textContent = total;
 }
 
+function openCart() {
+  cartPanel.classList.add("active");
+  cartOverlay.classList.add("active");
+}
 
-// ===================================================
-// 6. INIT – run when page loads
-// ===================================================
+function closeCart() {
+  cartPanel.classList.remove("active");
+  cartOverlay.classList.remove("active");
+}
 
-// Render products when the site first loads
-renderProducts();
+// ========== HELPER FUNCTIONS ==========
+function switchPage(pageName) {
+  showPage(pageName);
+}
 
-// Show the home page by default
-showPage('home');
+function handleSubmit(event) {
+  event.preventDefault();
+  alert("Message sent! We'll contact you soon.");
+  event.target.reset();
+}
+
+// ========== EVENT LISTENERS ==========
+navLinks.forEach(link => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    const pageName = link.getAttribute("data-page");
+    showPage(pageName);
+  });
+});
+
+cartBtn.addEventListener("click", openCart);
+closeCartBtn.addEventListener("click", closeCart);
+cartOverlay.addEventListener("click", closeCart);
+
+// Initialize home page on load
+showPage("home");
