@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZayFBS – Nos Produits</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 </head>
 <body>
-        <nav id="navbar">
+
+  <nav id="navbar">
     <div class="nav-logo">
-    <a href="index.html">
+    <a href="">
         <img src="images/ZayFBS nvLOgo-01.png" alt="ZayFBS nav logo" >
     </a>
     </div>
     <div class="nav-links">
-      <a href="index.html" class="active" data-page="home">Accueil</a>
-      <a href="#" data-page="products">Nos Produits</a>
+      <a href="#" class="active" data-page="home">Accueil</a>
+      <a href="produit.html" data-page="products">Nos Produits</a>
       <a href="#" data-page="contact">Nous Contacter</a>
     </div>
     <button class="nav-cart-btn" id="cartBtn">
@@ -25,9 +27,136 @@
     </button>
   </nav>
 
-    <div class="container" id="shop-container"></div>
 
+  <!-- ───────────── HERO BAND ───────────── -->
+  <section class="hero-band">
+    <h1>Nos Produits</h1>
+    <p>Découvrez notre gamme d'huiles d'olive extra vierge de Fquih Ben Saleh</p>
+  </section>
 
-  <script src="app.js"></script>
+  <!-- ───────────── MAIN ───────────── -->
+  <main class="container">
+    <div class="toolbar">
+      <button class="btn-add-product" id="addProductBtn">
+        <span>+</span> Ajouter un produit
+      </button>
+    </div>
+
+    <div class="product-grid" id="productGrid">
+
+      <!-- Card 1 -->
+      <div class="product-card" data-id="1" data-name="Huile Extra Vierge Classique" data-price="75">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&q=80"
+               alt="Huile Extra Vierge Classique" />
+        </div>
+        <div class="card-body">
+          <h3>Huile Extra Vierge Classique</h3>
+          <p>Pressée à froid, issue d'olives Picholine marocaine. Arôme fruité, légèrement poivré, idéale en cuisine.</p>
+          <span class="price">75 DH</span>
+          <div class="card-actions">
+            <button class="btn-ajouter" onclick="addToCart(this)">Ajouter</button>
+            <button class="btn-modifier">Modifier</button>
+            <button class="btn-supprimer">Supprimer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="product-card" data-id="2" data-name="Huile Bio Premium 500ml" data-price="120">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1601039641847-7857b994d704?w=400&q=80"
+               alt="Huile Bio Premium 500ml" />
+        </div>
+        <div class="card-body">
+          <h3>Huile Bio Premium 500ml</h3>
+          <p>Certifiée Agriculture Biologique. Zéro pesticide, récolte manuelle. Goût intense et délicat.</p>
+          <span class="price">120 DH</span>
+          <div class="card-actions">
+            <button class="btn-ajouter" onclick="addToCart(this)">Ajouter</button>
+            <button class="btn-modifier">Modifier</button>
+            <button class="btn-supprimer">Supprimer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="product-card" data-id="3" data-name="Huile Artisanale 1L" data-price="145">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80"
+               alt="Huile Artisanale 1L" />
+        </div>
+        <div class="card-body">
+          <h3>Huile Artisanale 1L</h3>
+          <p>Extraction traditionnelle à la meule de pierre. Richesse en polyphénols. Conditionnée en bouteille verre.</p>
+          <span class="price">145 DH</span>
+          <div class="card-actions">
+            <button class="btn-ajouter" onclick="addToCart(this)">Ajouter</button>
+            <button class="btn-modifier">Modifier</button>
+            <button class="btn-supprimer">Supprimer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="product-card" data-id="4" data-name="Coffret Découverte" data-price="210">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1582515073490-39981397c445?w=400&q=80"
+               alt="Coffret Découverte" />
+        </div>
+        <div class="card-body">
+          <h3>Coffret Découverte</h3>
+          <p>3 bouteilles de 250ml représentant nos 3 variétés d'olives locales. Idéal cadeau ou dégustation.</p>
+          <span class="price">210 DH</span>
+          <div class="card-actions">
+            <button class="btn-ajouter" onclick="addToCart(this)">Ajouter</button>
+            <button class="btn-modifier">Modifier</button>
+            <button class="btn-supprimer">Supprimer</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /product-grid -->
+  </main>
+
+  <!-- ───────────── FOOTER ───────────── -->
+  <footer class="footer">
+    <span>© 2025 ZayFBS · Fquih Ben Saleh, Maroc</span>
+    <span>contact@zayfbs.ma · +212 6XX XXX XXX</span>
+  </footer>
+
+  <!-- ───────────── CART OVERLAY ───────────── -->
+  <div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+  <!-- ───────────── CART SLIDE ───────────── -->
+  <aside class="cart-panel" id="cartPanel">
+    <div class="cart-header">
+      <h2>Mon Panier</h2>
+      <button class="close-cart" id="closeCartBtn" onclick="closeCart()" aria-label="Fermer">✕</button>
+    </div>
+
+    <div class="cart-body" id="cartBody">
+      <div class="cart-empty" id="cartEmpty">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <p>Votre panier est vide</p>
+      </div>
+      <ul class="cart-list" id="cartList"></ul>
+    </div>
+
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total">
+        <span>Total</span>
+        <strong id="cartTotal">0 DH</strong>
+      </div>
+      <button class="btn-checkout">Commander</button>
+    </div>
+  </aside>
+
+  <script src="script.js"></script>
 </body>
 </html>
