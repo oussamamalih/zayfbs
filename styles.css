@@ -730,3 +730,343 @@ footer {
 }
 .cart-btn.bounce { animation: cartBounce .4s ease; }
  
+
+
+
+
+/* ================================================================
+   ZayFBS – modal-extras.css
+   Coller à la fin de styles.css
+   ================================================================ */
+
+/* ── Variables manquantes (complète :root) ── */
+:root {
+  --green-deep  : #285A48;
+  --green-mid   : #408A71;
+  --green-soft  : #c8ead9;
+  --green-pale  : #edf7f2;
+  --gold        : #b8860b;
+  --gold-light  : #fef3c7;
+  --white       : #ffffff;
+  --off-white   : #f9fafb;
+  --text-dark   : #0f2e22;
+  --text-mid    : #4a6659;
+  --text-soft   : #7a9e8e;
+  --border      : #d8ece3;
+  --radius-card : 14px;
+  --radius-btn  : 8px;
+  --shadow-card : 0 2px 16px rgba(40,90,72,.10);
+  --shadow-panel: -6px 0 32px rgba(0,0,0,.18);
+  --panel-w     : 360px;
+  --transition  : .22s ease;
+}
+
+/* ── Hero band padding-top (navbar fixe) ── */
+.hero-band { margin-top: 56px; }
+.hero      { padding-top: 56px; }
+
+/* ── Bouton ajouter produit (correction variables) ── */
+.btn-add-product {
+  background : var(--green-deep);
+  color      : var(--white);
+  border     : none;
+  border-radius: var(--radius-btn);
+  padding    : 10px 22px;
+  display    : inline-flex;
+  align-items: center;
+  gap        : 8px;
+  font-size  : .88rem;
+  font-weight: 500;
+  box-shadow : 0 3px 12px rgba(40,90,72,.22);
+  transition : background var(--transition), transform var(--transition);
+}
+.btn-add-product:hover {
+  background : var(--green-mid);
+  transform  : translateY(-2px);
+}
+
+/* ── Close / cancel buttons (reset border) ── */
+.modal-close,
+.close-cart,
+.qty-btn,
+.cart-item-remove,
+.btn-cancel {
+  border: none;
+  background: none;
+}
+
+/* ================================================================
+   MODAL OVERLAY
+   ================================================================ */
+.modal-overlay {
+  position       : fixed;
+  inset          : 0;
+  background     : rgba(9,20,19,.45);
+  z-index        : 400;
+  opacity        : 0;
+  pointer-events : none;
+  transition     : opacity var(--transition);
+  backdrop-filter: blur(3px);
+}
+.modal-overlay.active {
+  opacity        : 1;
+  pointer-events : all;
+}
+
+/* ================================================================
+   MODAL BOX (Add / Edit product & Contact)
+   ================================================================ */
+.modal {
+  position  : fixed;
+  top       : 50%;
+  left      : 50%;
+  transform : translate(-50%, -48%) scale(.96);
+  z-index   : 500;
+  width     : min(520px, 92vw);
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.22);
+  opacity   : 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+  overflow  : hidden;
+}
+.modal.open {
+  opacity        : 1;
+  pointer-events : all;
+  transform      : translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+  display        : flex;
+  justify-content: space-between;
+  align-items    : center;
+  padding        : 20px 24px;
+  background     : var(--green-pale);
+  border-bottom  : 1px solid var(--border);
+}
+.modal-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size  : 1.15rem;
+  color      : var(--green-deep);
+  margin     : 0;
+}
+.modal-close {
+  width          : 34px;
+  height         : 34px;
+  border-radius  : 50%;
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  font-size      : 1rem;
+  color          : var(--text-mid);
+  cursor         : pointer;
+  transition     : background var(--transition);
+}
+.modal-close:hover { background: var(--green-soft); color: var(--green-deep); }
+
+.modal-body {
+  padding         : 24px;
+  max-height      : 70vh;
+  overflow-y      : auto;
+}
+
+/* ── Image preview ── */
+.img-preview-wrap {
+  margin-bottom : 16px;
+  border-radius : 10px;
+  overflow      : hidden;
+  height        : 160px;
+  background    : var(--green-pale);
+}
+.img-preview-wrap img {
+  width      : 100%;
+  height     : 100%;
+  object-fit : cover;
+}
+
+/* ── Form groups ── */
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display      : block;
+  font-size    : .8rem;
+  font-weight  : 600;
+  color        : var(--text-mid);
+  margin-bottom: 6px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.req { color: #c0392b; }
+
+.form-group input,
+.form-group textarea {
+  width         : 100%;
+  padding       : 10px 14px;
+  border        : 1.5px solid var(--border);
+  border-radius : 8px;
+  font-size     : .88rem;
+  color         : var(--text-dark);
+  background    : var(--off-white);
+  transition    : border-color var(--transition), box-shadow var(--transition);
+  box-sizing    : border-box;
+  font-family   : inherit;
+  resize        : vertical;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline      : none;
+  border-color : var(--green-mid);
+  box-shadow   : 0 0 0 3px rgba(64,138,113,.18);
+  background   : #fff;
+}
+
+.form-error {
+  font-size  : .8rem;
+  color      : #c0392b;
+  min-height : 18px;
+  margin-bottom: 4px;
+}
+
+/* ── Form actions ── */
+.form-actions {
+  display        : flex;
+  justify-content: flex-end;
+  gap            : 10px;
+  margin-top     : 8px;
+}
+.btn-cancel {
+  padding      : 10px 20px;
+  border-radius: var(--radius-btn);
+  font-size    : .85rem;
+  font-weight  : 500;
+  color        : var(--text-mid);
+  background   : var(--off-white);
+  border       : 1.5px solid var(--border);
+  cursor       : pointer;
+  transition   : background var(--transition);
+}
+.btn-cancel:hover { background: var(--green-soft); }
+
+.btn-save {
+  padding      : 10px 24px;
+  border-radius: var(--radius-btn);
+  font-size    : .85rem;
+  font-weight  : 600;
+  color        : var(--white);
+  background   : var(--green-deep);
+  border       : none;
+  cursor       : pointer;
+  transition   : background var(--transition), transform var(--transition);
+}
+.btn-save:hover { background: var(--green-mid); transform: translateY(-1px); }
+
+/* ── Contact intro ── */
+.contact-intro {
+  font-size    : .85rem;
+  color        : var(--text-soft);
+  margin-bottom: 20px;
+  line-height  : 1.55;
+}
+
+/* ================================================================
+   CONFIRM DIALOG
+   ================================================================ */
+.confirm-modal {
+  width         : min(380px, 88vw);
+  padding       : 30px 28px;
+  text-align    : center;
+}
+.confirm-modal p {
+  font-size    : .95rem;
+  color        : var(--text-dark);
+  margin-bottom: 24px;
+  font-weight  : 500;
+}
+.btn-delete {
+  padding      : 10px 22px;
+  border-radius: var(--radius-btn);
+  font-size    : .85rem;
+  font-weight  : 600;
+  color        : #fff;
+  background   : #c0392b;
+  border       : none;
+  cursor       : pointer;
+  transition   : background var(--transition);
+}
+.btn-delete:hover { background: #a93226; }
+
+/* ================================================================
+   CART BADGE
+   ================================================================ */
+.nav-cart-btn { position: relative; }
+
+.cart-badge {
+  position        : absolute;
+  top             : -4px;
+  right           : -4px;
+  min-width       : 18px;
+  height          : 18px;
+  padding         : 0 4px;
+  border-radius   : 9px;
+  background      : #e74c3c;
+  color           : #fff;
+  font-size       : .65rem;
+  font-weight     : 700;
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  box-shadow      : 0 1px 4px rgba(0,0,0,.3);
+  pointer-events  : none;
+  line-height     : 1;
+}
+
+/* ================================================================
+   EMPTY PRODUCTS STATE
+   ================================================================ */
+.empty-products {
+  grid-column    : 1 / -1;
+  display        : flex;
+  flex-direction : column;
+  align-items    : center;
+  gap            : 14px;
+  padding        : 60px 20px;
+  color          : var(--text-soft);
+}
+.empty-products p {
+  text-align : center;
+  font-size  : .88rem;
+  line-height: 1.6;
+}
+
+/* ================================================================
+   TOAST (override z-index for modals)
+   ================================================================ */
+.toast { z-index: 1000; }
+
+/* ================================================================
+   CART NAV BUTTON BOUNCE ANIMATION FIX
+   ================================================================ */
+.nav-cart-btn.bounce { animation: cartBounce .4s ease; }
+@keyframes cartBounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.4); }
+  65%  { transform: scale(.88); }
+  100% { transform: scale(1); }
+}
+
+/* ================================================================
+   FOOTER (produit.html)
+   ================================================================ */
+.footer {
+  background: var(--c4, #B0E4CC);
+  color      : var(--c1, #091413);
+  padding    : 1.1rem 2rem;
+  display    : flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size  : .78rem;
+  flex-wrap  : wrap;
+  gap        : .5rem;
+}
