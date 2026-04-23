@@ -1,8 +1,3 @@
-/* ================================================================
-   ZayFBS – script.js
-   Gestion : Produits (CRUD), Panier, Contact
-   ================================================================ */
-
 'use strict';
 
 // ── Produits par défaut ──────────────────────────────────────────
@@ -32,39 +27,35 @@ const DEFAULT_PRODUCTS = [
     id: 4,
     name: 'Coffret Découverte',
     price: 210,
-    description: '3 bouteilles de 250ml représentant nos 3 variétés d\'olives locales. Idéal cadeau ou dégustation.',
+    description: "3 bouteilles de 250ml représentant nos 3 variétés d'olives locales. Idéal cadeau ou dégustation.",
     image: 'https://images.unsplash.com/photo-1582515073490-39981397c445?w=400&q=80'
   }
 ];
 
 // ── État global ──────────────────────────────────────────────────
-let products = JSON.parse(localStorage.getItem('zayfbs_products')) || DEFAULT_PRODUCTS;
-let cart     = JSON.parse(localStorage.getItem('zayfbs_cart'))     || [];
+let products  = JSON.parse(localStorage.getItem('zayfbs_products')) || DEFAULT_PRODUCTS;
+let cart      = JSON.parse(localStorage.getItem('zayfbs_cart'))     || [];
 let editingId = null;
 
 // ── Persistance ──────────────────────────────────────────────────
 const saveProducts = () => localStorage.setItem('zayfbs_products', JSON.stringify(products));
 const saveCart     = () => localStorage.setItem('zayfbs_cart',     JSON.stringify(cart));
 
+
 /* ================================================================
    INITIALISATION
    ================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ----- Page Produits ----- */
   if (document.getElementById('productGrid')) {
     renderProducts();
     injectProductModal();
     document.getElementById('addProductBtn').addEventListener('click', openAddModal);
   }
 
-  /* ----- Panier (toutes pages) ----- */
   initCart();
-
-  /* ----- Contact ----- */
   injectContactModal();
 
-  /* ----- Bouton "Découvrir nos produits" (Accueil) ----- */
   const discoverBtn = document.querySelector('.btn-discover');
   if (discoverBtn) {
     discoverBtn.addEventListener('click', () => {
@@ -72,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ----- Navbar : lien Contact ----- */
   document.querySelectorAll('[data-page="contact"]').forEach(link => {
     link.addEventListener('click', e => { e.preventDefault(); openContact(); });
   });
@@ -117,7 +107,7 @@ function buildCardHTML(p) {
         <p>${escapeHTML(p.description)}</p>
         <span class="price">${p.price} DH</span>
         <div class="card-actions">
-          <button class="btn-ajouter" onclick="addToCart(this)">Ajouter</button>
+          <button class="btn-ajouter"  onclick="addToCart(this)">Ajouter</button>
           <button class="btn-modifier" onclick="openEditModal(${p.id})">Modifier</button>
           <button class="btn-supprimer" onclick="deleteProduct(${p.id})">Supprimer</button>
         </div>
@@ -130,7 +120,7 @@ function addProduct(data) {
   products.push({ id: Date.now(), ...data });
   saveProducts();
   renderProducts();
-  showToast('✓ Produit ajouté avec succès !');
+  alert('✓ Produit ajouté avec succès !');
 }
 
 /* ── UPDATE ── */
@@ -138,20 +128,19 @@ function updateProduct(id, data) {
   products = products.map(p => p.id === id ? { id, ...data } : p);
   saveProducts();
   renderProducts();
-  showToast('✓ Produit modifié avec succès !');
+  alert('✓ Produit modifié avec succès !');
 }
 
 /* ── DELETE ── */
 function deleteProduct(id) {
-  openConfirm('Supprimer ce produit ?', () => {
-    products = products.filter(p => p.id !== id);
-    cart     = cart.filter(c => c.id !== id);
-    saveProducts();
-    saveCart();
-    renderProducts();
-    renderCart();
-    showToast('Produit supprimé.');
-  });
+  if (!confirm('Supprimer ce produit ?')) return;
+  products = products.filter(p => p.id !== id);
+  cart     = cart.filter(c => c.id !== id);
+  saveProducts();
+  saveCart();
+  renderProducts();
+  renderCart();
+  alert('Produit supprimé.');
 }
 
 
@@ -195,19 +184,8 @@ function injectProductModal() {
         </div>
       </div>
     </div>
-
-    <!-- Confirmation dialog -->
-    <div class="modal-overlay" id="confirmOverlay"></div>
-    <div class="modal confirm-modal" id="confirmModal" role="alertdialog">
-      <p id="confirmText"></p>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="closeConfirm(false)">Annuler</button>
-        <button class="btn-delete" onclick="closeConfirm(true)">Supprimer</button>
-      </div>
-    </div>
   `);
 
-  /* Image URL preview */
   document.getElementById('fImage').addEventListener('input', function () {
     const wrap = document.getElementById('imgPreviewWrap');
     const img  = document.getElementById('imgPreview');
@@ -224,8 +202,8 @@ function injectProductModal() {
 
 function openAddModal() {
   editingId = null;
-  document.getElementById('modalTitle').textContent  = 'Ajouter un produit';
-  document.getElementById('btnSave').textContent     = 'Ajouter';
+  document.getElementById('modalTitle').textContent    = 'Ajouter un produit';
+  document.getElementById('btnSave').textContent       = 'Ajouter';
   document.getElementById('prodFormError').textContent = '';
   ['fImage','fName','fDesc','fPrice'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('imgPreviewWrap').style.display = 'none';
@@ -236,13 +214,13 @@ function openEditModal(id) {
   const p = products.find(x => x.id === id);
   if (!p) return;
   editingId = id;
-  document.getElementById('modalTitle').textContent  = 'Modifier le produit';
-  document.getElementById('btnSave').textContent     = 'Enregistrer';
+  document.getElementById('modalTitle').textContent    = 'Modifier le produit';
+  document.getElementById('btnSave').textContent       = 'Enregistrer';
   document.getElementById('prodFormError').textContent = '';
-  document.getElementById('fImage').value = p.image || '';
-  document.getElementById('fName').value  = p.name;
-  document.getElementById('fDesc').value  = p.description;
-  document.getElementById('fPrice').value = p.price;
+  document.getElementById('fImage').value  = p.image || '';
+  document.getElementById('fName').value   = p.name;
+  document.getElementById('fDesc').value   = p.description;
+  document.getElementById('fPrice').value  = p.price;
 
   const wrap = document.getElementById('imgPreviewWrap');
   const img  = document.getElementById('imgPreview');
@@ -282,24 +260,6 @@ function handleProductSubmit() {
 
 
 /* ================================================================
-   CONFIRMATION DIALOG
-   ================================================================ */
-let _confirmCallback = null;
-
-function openConfirm(text, callback) {
-  _confirmCallback = callback;
-  document.getElementById('confirmText').textContent = text;
-  toggleModal('confirmOverlay', 'confirmModal', true);
-}
-
-function closeConfirm(confirmed) {
-  toggleModal('confirmOverlay', 'confirmModal', false);
-  if (confirmed && typeof _confirmCallback === 'function') _confirmCallback();
-  _confirmCallback = null;
-}
-
-
-/* ================================================================
    PANIER
    ================================================================ */
 
@@ -310,9 +270,11 @@ function initCart() {
   if (cartBtn)      cartBtn.addEventListener('click', openCart);
   if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
 
-  /* Checkout */
   const checkoutBtn = document.querySelector('.btn-checkout');
-  if (checkoutBtn) checkoutBtn.addEventListener('click', handleCheckout);
+  if (checkoutBtn)  checkoutBtn.addEventListener('click', handleCheckout);
+
+  const cancelBtn = document.querySelector('.btn-cancel-order');
+  if (cancelBtn)    cancelBtn.addEventListener('click', handleCancelOrder);
 
   renderCart();
   updateCartBadge();
@@ -337,13 +299,11 @@ function addToCart(btn) {
   renderCart();
   updateCartBadge();
 
-  /* Feedback visuel */
   btn.textContent = '✓ Ajouté';
   btn.classList.add('added');
   setTimeout(() => { btn.textContent = 'Ajouter'; btn.classList.remove('added'); }, 1600);
 
-  showToast(`🛒 ${p.name} ajouté au panier`);
-  bounceCartBtn();
+  alert(`🛒 ${p.name} ajouté au panier`);
 }
 
 /* ── Changer quantité ── */
@@ -430,8 +390,8 @@ function updateCartBadge() {
     badge.className = 'cart-badge';
     cartBtn.appendChild(badge);
   }
-  badge.textContent    = count > 99 ? '99+' : count;
-  badge.style.display  = count > 0 ? 'flex' : 'none';
+  badge.textContent   = count > 99 ? '99+' : count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
 }
 
 function openCart()  {
@@ -447,16 +407,18 @@ function closeCart() {
 function handleCheckout() {
   if (cart.length === 0) return;
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  showToast(`✓ Commande de ${total.toFixed(2)} DH confirmée ! Merci.`);
+  alert(`✓ Commande de ${total.toFixed(2)} DH confirmée ! Merci.`);
   clearCart();
   closeCart();
 }
 
-function bounceCartBtn() {
-  const btn = document.getElementById('cartBtn');
-  if (!btn) return;
-  btn.classList.add('bounce');
-  setTimeout(() => btn.classList.remove('bounce'), 450);
+/* ── Annuler la commande ── */
+function handleCancelOrder() {
+  if (cart.length === 0) return;
+  if (!confirm('Voulez-vous annuler et vider votre panier ?')) return;
+  clearCart();
+  closeCart();
+  alert('Commande annulée. Votre panier a été vidé.');
 }
 
 
@@ -479,15 +441,15 @@ function injectContactModal() {
         </p>
         <div class="form-group">
           <label for="cName">Nom complet <span class="req">*</span></label>
-          <input type="text"  id="cName"    placeholder="Votre nom" />
+          <input type="text"  id="cName"  placeholder="Votre nom" />
         </div>
         <div class="form-group">
           <label for="cEmail">Email <span class="req">*</span></label>
-          <input type="email" id="cEmail"   placeholder="votre@email.com" />
+          <input type="email" id="cEmail" placeholder="votre@email.com" />
         </div>
         <div class="form-group">
           <label for="cPhone">Téléphone</label>
-          <input type="tel"   id="cPhone"   placeholder="+212 6XX XXX XXX" />
+          <input type="tel"   id="cPhone" placeholder="+212 6XX XXX XXX" />
         </div>
         <div class="form-group">
           <label for="cMessage">Message <span class="req">*</span></label>
@@ -533,7 +495,7 @@ function handleContact() {
 
   err.textContent = '';
   closeContact();
-  showToast(`✉ Merci ${name} ! Votre message a bien été envoyé.`);
+  alert(`✉ Merci ${name} ! Votre message a bien été envoyé.`);
 }
 
 
@@ -541,30 +503,12 @@ function handleContact() {
    UTILITAIRES
    ================================================================ */
 
-/* Afficher / masquer un modal */
 function toggleModal(overlayId, modalId, open) {
   document.getElementById(overlayId)?.classList.toggle('active', open);
   document.getElementById(modalId)?.classList.toggle('open', open);
   document.body.style.overflow = open ? 'hidden' : '';
 }
 
-/* Notification toast */
-let _toastTimer;
-function showToast(msg) {
-  let toast = document.getElementById('zToast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id        = 'zToast';
-    toast.className = 'toast';
-    document.body.appendChild(toast);
-  }
-  clearTimeout(_toastTimer);
-  toast.textContent = msg;
-  toast.classList.add('show');
-  _toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-/* Échapper le HTML pour éviter les XSS */
 function escapeHTML(str) {
   return String(str)
     .replace(/&/g, '&amp;')
