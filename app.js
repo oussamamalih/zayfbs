@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initCart();
-  injectContactModal();
 
   const discoverBtn = document.querySelector('.btn-discover');
   if (discoverBtn) {
@@ -62,10 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'produit.html';
     });
   }
-
-  document.querySelectorAll('[data-page="contact"]').forEach(link => {
-    link.addEventListener('click', e => { e.preventDefault(); openContact(); });
-  });
 });
 
 
@@ -419,83 +414,6 @@ function handleCancelOrder() {
   clearCart();
   closeCart();
   alert('Commande annulée. Votre panier a été vidé.');
-}
-
-
-/* ================================================================
-   FORMULAIRE DE CONTACT
-   ================================================================ */
-
-function injectContactModal() {
-  document.body.insertAdjacentHTML('beforeend', `
-    <div class="modal-overlay" id="contactOverlay" onclick="closeContact()"></div>
-
-    <div class="modal" id="contactModal" role="dialog" aria-modal="true">
-      <div class="modal-header">
-        <h2>Nous Contacter</h2>
-        <button class="modal-close" onclick="closeContact()" aria-label="Fermer">✕</button>
-      </div>
-      <div class="modal-body">
-        <p class="contact-intro">
-          Une question sur nos produits ? Écrivez-nous, nous répondons sous 24 h.
-        </p>
-        <div class="form-group">
-          <label for="cName">Nom complet <span class="req">*</span></label>
-          <input type="text"  id="cName"  placeholder="Votre nom" />
-        </div>
-        <div class="form-group">
-          <label for="cEmail">Email <span class="req">*</span></label>
-          <input type="email" id="cEmail" placeholder="votre@email.com" />
-        </div>
-        <div class="form-group">
-          <label for="cPhone">Téléphone</label>
-          <input type="tel"   id="cPhone" placeholder="+212 6XX XXX XXX" />
-        </div>
-        <div class="form-group">
-          <label for="cMessage">Message <span class="req">*</span></label>
-          <textarea id="cMessage" rows="4" placeholder="Votre message…"></textarea>
-        </div>
-        <p class="form-error" id="contactError"></p>
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="closeContact()">Annuler</button>
-          <button type="button" class="btn-save"   onclick="handleContact()">Envoyer</button>
-        </div>
-      </div>
-    </div>
-  `);
-}
-
-function openContact() {
-  ['cName','cEmail','cPhone','cMessage'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('contactError').textContent = '';
-  toggleModal('contactOverlay', 'contactModal', true);
-}
-
-function closeContact() {
-  toggleModal('contactOverlay', 'contactModal', false);
-}
-
-function handleContact() {
-  const name    = document.getElementById('cName').value.trim();
-  const email   = document.getElementById('cEmail').value.trim();
-  const message = document.getElementById('cMessage').value.trim();
-  const err     = document.getElementById('contactError');
-
-  if (!name || !email || !message) {
-    err.textContent = '⚠ Veuillez remplir tous les champs obligatoires.';
-    return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    err.textContent = '⚠ Adresse email invalide.';
-    return;
-  }
-
-  err.textContent = '';
-  closeContact();
-  alert(`✉ Merci ${name} ! Votre message a bien été envoyé.`);
 }
 
 
