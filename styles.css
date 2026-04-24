@@ -461,10 +461,12 @@ footer {
   padding: 6px 12px;
   border-radius: 6px;
   transition: all var(--transition);
+  
 }
 .btn-ajouter {
   background: var(--green-deep);
   color: var(--white) !important;
+  border: none;
 }
 .btn-ajouter:hover {
   background: var(--green-mid) !important;
@@ -689,6 +691,8 @@ footer {
   border-radius: var(--radius-btn);
   font-size: .92rem;
   font-weight: 600;
+    border: none;
+
   letter-spacing: .03em;
   transition: background var(--transition), transform var(--transition);
 }
@@ -938,15 +942,17 @@ footer {
   margin-top     : 8px;
 }
 .btn-cancel {
-  padding      : 10px 20px;
+    width: 100%;
+  background: var(--green-deep);
+  color: var(--white);
+  padding: 13px;
   border-radius: var(--radius-btn);
-  font-size    : .85rem;
-  font-weight  : 500;
-  color        : var(--text-mid);
-  background   : var(--off-white);
-  border       : 1.5px solid var(--border);
-  cursor       : pointer;
-  transition   : background var(--transition);
+  font-size: .92rem;
+  font-weight: 600;
+    border: none;
+
+  letter-spacing: .03em;
+  transition: background var(--transition), transform var(--transition);
 }
 .btn-cancel:hover { background: var(--green-soft); }
 
@@ -1075,9 +1081,20 @@ footer {
 .btn-cancel-order {
   width: 100%;
   margin-top: 8px;
-  background: transparent;
+  background-color: var(--c2);
   border: 1px solid #ccc;
-  color: #666;
+  border-radius: 7px;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 10px 0;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+}
+.btn-cancel-order:hover {
+ background: var(--green-mid);
+  transform: translateY(-1px);
 }
 
 
